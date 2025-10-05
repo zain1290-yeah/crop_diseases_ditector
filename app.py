@@ -4,17 +4,33 @@ from tensorflow import keras
 import numpy as np
 import json
 from PIL import Image
+import gdown
+import os
 
-# Load model and labels
+# -----------------------------
+# 🔹 Download model if not present
+# -----------------------------
+MODEL_PATH = "best_finetuned.h5"
+
+if not os.path.exists(MODEL_PATH):
+    # ✅ Fixed direct download link
+    url = "https://drive.google.com/uc?id=1Q4hPt2ZqWaq-Z2PY4sGAA_fvcthgefnK"
+    gdown.download(url, MODEL_PATH, quiet=False)
+
+# -----------------------------
+# 🔹 Load model and labels
+# -----------------------------
 @st.cache_resource
 def load_model():
-    model = keras.models.load_model("best_finetuned.h5")
+    model = keras.models.load_model(MODEL_PATH)
     class_names = json.load(open("labels.json"))
     return model, class_names
 
 model, class_names = load_model()
 
-# App title
+# -----------------------------
+# 🔹 Streamlit UI
+# -----------------------------
 st.title("🌾 Crop Disease Classifier")
 st.write("Upload a leaf image to detect the type of disease or if it’s healthy.")
 
